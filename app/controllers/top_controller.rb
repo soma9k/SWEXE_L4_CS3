@@ -8,9 +8,10 @@ class TopController < ApplicationController
     end
     
     def login
-        if params[:uid] == 'kindai' and params[:pass] == 'sanriko'
-            session[:login_uid] = params[:uid]
-            render 'main'
+        user = User.find_by(uid: params[:uid])
+        if BCrypt::Password.new(user.pass) == params[:pass]
+           session[:login_uid] = params[:uid]
+           render 'main'
         else
             render 'login_failed'
         end
